@@ -21,7 +21,6 @@
     <ul class="navbar-nav">
       <li><a href="index.html">Home</a></li>
       <li><a href="dashboard.html" class="active">Dashboard</a></li>
-      <li><a href="#map-section">Map</a></li>
     </ul>
   </nav>
 
@@ -66,6 +65,27 @@
             <option value="2022">2022</option>
             <option value="2021">2021</option>
             <option value="2020">2020</option>
+            <option value="2019">2019</option>
+            <option value="2018">2018</option>
+            <option value="2017">2017</option>
+            <option value="2016">2016</option>
+            <option value="2015">2015</option>
+            <option value="2014">2014</option>
+            <option value="2013">2013</option>
+            <option value="2012">2012</option>
+            <option value="2011">2011</option>
+            <option value="2010">2010</option>
+            <option value="2009">2009</option>
+            <option value="2008">2008</option>
+            <option value="2007">2007</option>
+            <option value="2006">2006</option>
+            <option value="2005">2005</option>
+            <option value="2004">2004</option>
+            <option value="2003">2003</option>
+            <option value="2002">2002</option>
+            <option value="2001">2001</option>
+            <option value="2000">2000</option>
+            <option value="1999">1999</option>
           </select>
         </div>
 
@@ -115,26 +135,11 @@
 
       <div class="chart-container" id="chartCard">
         <div class="chart-header">
-          <span class="chart-title" id="chartTitle">Education, Sports, Art &amp; Culture — Social Services</span>
-          <div class="chart-legend" id="chartLegend">
-            <div class="legend-item">
-              <div class="legend-dot" style="background:#E8A020;"></div>
-              <span>Education, sports, art and culture (INR)</span>
-            </div>
-          </div>
+          <span class="chart-title" id="chartTitle">Budget Data</span>
+          <div class="chart-legend" id="chartLegend"></div>
         </div>
-        <div class="chart-canvas-wrapper">
-          <canvas id="mainChart" height="320"></canvas>
-        </div>
-      </div>
-
-      <div class="chart-container" id="secondaryChart" style="display:none;">
-        <div class="chart-header">
-          <span class="chart-title">Year-over-Year Trend</span>
-          <div class="chart-legend" id="secondaryLegend"></div>
-        </div>
-        <div class="chart-canvas-wrapper">
-          <canvas id="trendChart" height="220"></canvas>
+        <div class="chart-canvas-wrapper" style="height:320px;">
+          <canvas id="mainChart"></canvas>
         </div>
       </div>
 
@@ -143,7 +148,7 @@
           <span class="ai-badge">AI Insight</span>
         </div>
         <p class="ai-insight-text" id="aiInsightText">
-          MongoDB data retrieved. Click <strong>Explain Data</strong> to generate an AI-powered analysis of the currently displayed data.
+          Loading data…
         </p>
         <button class="btn-primary" onclick="explainData()">
           <svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -155,43 +160,12 @@
 
     </main>
 
-    <!-- Right Panel -->
-    <aside class="right-panel" id="map-section">
-      <div class="panel-label">Geographic Map</div>
-
-      <div class="map-placeholder" id="mapPlaceholder">
-        <div class="map-placeholder-icon">🗺️</div>
-        <p>India spending map will appear here once filters are applied</p>
-      </div>
-
-      <div class="panel-label" style="margin-top:8px;">Summary Stats</div>
-
-      <div id="summaryStats">
-        <div class="stat-item">
-          <div class="stat-label">Highest spending state</div>
-          <div class="stat-value" id="statHighest">—</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">Total (selected sector)</div>
-          <div class="stat-value text-mono" id="statTotal">—</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">YoY Change</div>
-          <div class="stat-value"><span class="stat-delta" id="statDelta">—</span></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-label">States with data</div>
-          <div class="stat-value text-mono" id="statCount">—</div>
-        </div>
-      </div>
-    </aside>
-
   </div>
 
   <script src="dashboard.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
-    if (params.get('query')) handleNLQuery(params.get('query'));
+    if (params.get('query')) processNLQuery(params.get('query'));
 
     function selectDataset(btn, type) {
       document.querySelectorAll('.sidebar-dataset-btn').forEach(b => b.classList.remove('active'));
@@ -213,16 +187,6 @@
         `${sector.options[sector.selectedIndex].text} spending across Indian states, ${year.value}`;
     }
 
-    function applyFilters() {
-      updateSelectionSummary();
-      if (typeof loadChartData === 'function') loadChartData();
-    }
-
-    function handleNLQuery(query) {
-      document.getElementById('aiInsightText').textContent = `Processing query: "${query}"…`;
-      if (typeof processNLQuery === 'function') processNLQuery(query);
-    }
-
     function explainData() {
       const btn = document.querySelector('.btn-primary');
       btn.innerHTML = 'Analysing…';
@@ -232,11 +196,6 @@
           btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 10.5h-1.5v-5h1.5v5zm0-6.5h-1.5V3.5h1.5V5z"/></svg> Explain Data`;
           btn.disabled = false;
         });
-      } else {
-        setTimeout(() => {
-          btn.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm.75 10.5h-1.5v-5h1.5v5zm0-6.5h-1.5V3.5h1.5V5z"/></svg> Explain Data`;
-          btn.disabled = false;
-        }, 1200);
       }
     }
 
